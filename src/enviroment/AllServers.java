@@ -19,8 +19,9 @@ public class AllServers {
 
 			}
 
-		   System.out.println("No server is avaliable right now");
+		   System.out.println("No server is avaliable right now to verify transaction");
 			
+		   return from;
 		
 
 	}
@@ -34,7 +35,6 @@ public class AllServers {
 			s.setBitCoins(bitCoins);
 		}
 	}
-
 	public static void actualizeTransaction(Transaction tr, Boolean valid) {
 
 	          tr.setValidate(valid);

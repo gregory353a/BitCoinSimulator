@@ -54,6 +54,8 @@ public class Server implements BitCoinManagament {
 	}
 
 	public void setActual(Boolean actual) {
+		
+		
 		this.actual = actual;
 	}
 
@@ -68,10 +70,12 @@ public class Server implements BitCoinManagament {
 	public Boolean send(BitCoin btc, Server to)  {
 
 		Transaction transaction = new Transaction(btc, this, to);
-		Server activeServer = AllServers.getActualServer(this,to);
-	    transaction.setValidator(activeServer);
 		
-		if (verify(activeServer, btc,this)) {
+		Server activeServer = AllServers.getActualServer(this,to);
+		
+		transaction.setValidator(activeServer);
+		
+		if (!activeServer.equals(this)&&verify(activeServer, btc,this)) {
 				
 		
 			this.myBitCoins.remove(btc);
