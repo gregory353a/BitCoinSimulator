@@ -1,1 +1,1 @@
-scaliłem gałęźie powinno śmigać
+scaliłem gałęzie powinno śmigać
