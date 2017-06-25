@@ -72,44 +72,17 @@ public class Simulator {
 				
 		btcPanel = new JLayeredPane();
 		btcPanel.setBounds(280, 30, 260, 546);
-		frame.getContentPane().add(btcPanel);
-		
-		JPanel panelBtc = new JPanel();
-		int y = (offsetY + btcHeight)* position + offsetY;
-		panelBtc.setBounds(offsetX, y, btcWidth, btcHeight);
-		btcPanel.add(panelBtc);
-		panelBtc.setLayout(new BorderLayout(0, 0));
-		{
-			JLabel lblServernumber = new JLabel("serverNumber");
-			lblServernumber.setHorizontalAlignment(SwingConstants.CENTER);
-			lblServernumber.setFont(new Font("Tahoma", Font.BOLD, 14));
-			panelBtc.add(lblServernumber, BorderLayout.NORTH);
-			
-			JTextPane txtpnInformation = new JTextPane();
-			txtpnInformation.setText("Szcz\u0105tkowe informacje o serwerze");
-			panelBtc.add(txtpnInformation, BorderLayout.CENTER);
-			
-			JPanel panelButton = new JPanel();
-			panelButton.setBounds(10, 11, 240, 40);
-			panelBtc.add(panelButton, BorderLayout.SOUTH);
-			panelButton.setLayout(new BorderLayout(0, 0));
-			
-			{
-				
-				JButton btnAccident = new JButton("Awaria");
-				panelButton.add(btnAccident, BorderLayout.WEST);
-				
-				JButton btnTurnOn = new JButton("Uruchom");
-				panelButton.add(btnTurnOn, BorderLayout.EAST);
-				
-				JButton btnTracking = new JButton("\u015Aled\u017A");
-				panelButton.add(btnTracking, BorderLayout.CENTER);
-			}
-		}		
+		frame.getContentPane().add(btcPanel);	
 		
 		blockchainPanel = new JLayeredPane();
 		blockchainPanel.setBounds(550, 30, 260, 546);
 		frame.getContentPane().add(blockchainPanel);
+		
+		for(int i= 0; i<10; i++){
+		serverPanel.add(newServer(i));
+		btcPanel.add(newBtc(i));
+		blockchainPanel.add(newBtc(i));
+		}
 		
 		JPanel choosePanel = new JPanel();
 		choosePanel.setBounds(820, 30, 250, 185);
@@ -155,6 +128,41 @@ public class Simulator {
 		JLabel lblWybrano = new JLabel("Wybrano:");
 		lblWybrano.setBounds(820, 5, 250, 20);
 		frame.getContentPane().add(lblWybrano);
+	}
+
+	private JPanel newBtc(int position) {
+		JPanel panelBtc = new JPanel();
+		int y = (offsetY + btcHeight)* position + offsetY;
+		panelBtc.setBounds(offsetX, y, btcWidth, btcHeight);
+		panelBtc.setLayout(new BorderLayout(0, 0));
+		{
+			JLabel lblServernumber = new JLabel("serverNumber");
+			lblServernumber.setHorizontalAlignment(SwingConstants.CENTER);
+			lblServernumber.setFont(new Font("Tahoma", Font.BOLD, 14));
+			panelBtc.add(lblServernumber, BorderLayout.NORTH);
+			
+			JTextPane txtpnInformation = new JTextPane();
+			txtpnInformation.setText("Szcz\u0105tkowe informacje o serwerze");
+			panelBtc.add(txtpnInformation, BorderLayout.CENTER);
+			
+			JPanel panelButton = new JPanel();
+			panelButton.setBounds(10, 11, 240, 40);
+			panelBtc.add(panelButton, BorderLayout.SOUTH);
+			panelButton.setLayout(new BorderLayout(0, 0));
+			
+			{
+				
+				JButton btnAccident = new JButton("Awaria");
+				panelButton.add(btnAccident, BorderLayout.WEST);
+				
+				JButton btnTurnOn = new JButton("Uruchom");
+				panelButton.add(btnTurnOn, BorderLayout.EAST);
+				
+				JButton btnTracking = new JButton("\u015Aled\u017A");
+				panelButton.add(btnTracking, BorderLayout.CENTER);
+			}
+		}
+		return panelBtc;
 	}
 	
 	private JPanel newServer(int position){
