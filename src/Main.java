@@ -1,4 +1,3 @@
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import enviroment.AllServers;
@@ -15,7 +14,7 @@ public class Main {
 
 	}
 
-	private static void initialize() {
+	public static void initialize() {
 
 		ArrayList<BitCoin> s1Btc = new ArrayList<>();
 		BitCoin b1=new BitCoin("s1", 1);
