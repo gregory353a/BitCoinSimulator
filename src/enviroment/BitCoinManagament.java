@@ -2,7 +2,7 @@ package enviroment;
 
 public interface BitCoinManagament {
 
-	public Boolean send(BitCoin btc, Server toName) throws InterruptedException;
-	public Boolean verify(Server actSer, BitCoin btc, Server from);
+	public Boolean send(BitCoin btc, Server to);
+	public Boolean verify(BitCoin btc, Server from);
 	
 }
