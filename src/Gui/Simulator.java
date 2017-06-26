@@ -12,6 +12,7 @@ import javax.swing.SwingConstants;
 
 import enviroment.BitCoin;
 import enviroment.Server;
+import enviroment.Information;
 
 import javax.swing.JLayeredPane;
 import java.awt.Font;
@@ -19,6 +20,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.BorderLayout;
 import javax.swing.JTextPane;
+import java.awt.Button;
+import javax.swing.JTextArea;
 
 public class Simulator {
 
@@ -31,6 +34,9 @@ public class Simulator {
 	private ArrayList<JPanel> chainList = new ArrayList<>();
 	private ArrayList<JPanel> serverList = new ArrayList<>();
 	private ArrayList<JPanel> btcList = new ArrayList<>();
+	private JPanel choosePanel;
+	private JTextPane txtpnInformacje;
+	private JLabel lblWybranySerwer;
 	
 	private final int offsetY = 5;
 	private final int offsetX = 10;
@@ -39,7 +45,7 @@ public class Simulator {
 	private final int btcHeight = 35;
 	private final int btcWidth = 240;
 	private final int blockChainHeight = 35;
-	private final int blochChainWidth = 240;
+	private final int blockChainWidth = 240;
 	
 	
 	/**
@@ -111,9 +117,10 @@ public class Simulator {
 		blockchainPanel.add(newBlockChain(i));
 		}
 		
-		JPanel choosePanel = new JPanel();
+		choosePanel = new JPanel();
 		choosePanel.setBounds(820, 30, 260, 185);
 		frame.getContentPane().add(choosePanel);
+		choosePanel.setLayout(new BorderLayout(0, 0));
 		
 		toTextField = new JTextField();
 		toTextField.setBounds(910, 236, 86, 20);
@@ -124,10 +131,6 @@ public class Simulator {
 		howManyTextField.setBounds(910, 257, 86, 20);
 		frame.getContentPane().add(howManyTextField);
 		howManyTextField.setColumns(10);
-		
-		JButton btnWylij = new JButton("Wy\u015Blij");
-		btnWylij.setBounds(910, 280, 86, 23);
-		frame.getContentPane().add(btnWylij);
 		
 		JLabel lblDo = new JLabel("Do");
 		lblDo.setBounds(854, 239, 46, 14);
@@ -144,7 +147,7 @@ public class Simulator {
 		
 		JLabel lblBtc = new JLabel("BTC");
 		lblBtc.setHorizontalAlignment(SwingConstants.CENTER);
-		lblBtc.setBounds(280, 5, 260, 20);
+		lblBtc.setBounds(280, 5, 184, 20);
 		frame.getContentPane().add(lblBtc);
 		
 		JLabel lblBlockchain = new JLabel("Blockchain");
@@ -155,6 +158,31 @@ public class Simulator {
 		JLabel lblWybrano = new JLabel("Wybrano:");
 		lblWybrano.setBounds(820, 5, 250, 20);
 		frame.getContentPane().add(lblWybrano);
+		
+		JButton btnWyczy = new JButton("Wyczy\u015B\u0107");
+		btnWyczy.setBounds(451, 4, 89, 23);
+		frame.getContentPane().add(btnWyczy);
+		btnWyczy.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				btcPanel.removeAll();
+				btcList.clear();
+				btcPanel.repaint();
+			}
+		});
+		
+		//TODO
+		JButton btnWylij = new JButton("Wy\u015Blij");
+		btnWylij.setBounds(910, 280, 86, 23);
+		frame.getContentPane().add(btnWylij);
+		btnWylij.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				System.out.println("wysy³anie");
+				toTextField.getText();
+				howManyTextField.getText();
+				btcList.clear();
+				btcPanel.repaint();
+			}
+		});
 	}
 	
 	//TODO
@@ -162,6 +190,11 @@ public class Simulator {
 	//	serverList = ;
 	}
 
+	//TODO
+	private void setBlockChainList(){
+
+	}
+	
 	private void setBtcListPanel(Server server){
 		btcList.clear();
 		for(int i=0; i<server.getMyBitCoins().size(); i++){
@@ -173,7 +206,7 @@ public class Simulator {
 	private JPanel newBlockChain(int position) {
 		JPanel panelBtc = new JPanel();
 		int y = (offsetY + blockChainHeight)* position + offsetY;
-		panelBtc.setBounds(offsetX, y, blochChainWidth, blockChainHeight);
+		panelBtc.setBounds(offsetX, y, blockChainWidth, blockChainHeight);
 		panelBtc.setLayout(new BorderLayout(0, 0));
 		{
 			JLabel lblServernumber = new JLabel("chainNumber");
@@ -194,7 +227,7 @@ public class Simulator {
 		panelBtc.setBounds(offsetX, y, btcWidth, btcHeight);
 		panelBtc.setLayout(new BorderLayout(0, 0));
 		{
-			JLabel lblServernumber = new JLabel("btcNumber");
+			JLabel lblServernumber = new JLabel("btcNumber:" + btc.getBtcNumber());
 			lblServernumber.setHorizontalAlignment(SwingConstants.CENTER);
 			lblServernumber.setFont(new Font("Tahoma", Font.BOLD, 14));
 			panelBtc.add(lblServernumber, BorderLayout.NORTH);
@@ -219,8 +252,8 @@ public class Simulator {
 			
 			JTextPane txtpnInformation = new JTextPane();
 			txtpnInformation.setContentType("text/html");
-			txtpnInformation.setText("Serwer jest aktywny: " + server.getActive() +
-					"<br>Serwer jest uruchomiony" + server.getActual() + 
+			txtpnInformation.setText("Serwer " + (server.getActive()?"":"nie ") + "jest aktywny: " +
+					"<br>Serwer " + (server.getActual()?"":"nie ") + "jest uruchomiony" + 
 					"<br>Serwer posiada: " +  server.getMyBitCoins().size() + " BTC");
 			txtpnInformation.setEditable(false);
 			panelServer.add(txtpnInformation, BorderLayout.CENTER);
@@ -236,8 +269,14 @@ public class Simulator {
 				panelButton.add(btnAccident, BorderLayout.WEST);
 				btnAccident.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						server.setActive(false);
-						refresch();
+						//server.setActive(false);
+						server.goSleep();
+						txtpnInformation.setText("Serwer " + (server.getActive()?"":"nie ") + "jest aktywny: " +
+								"<br>Serwer " + (server.getActual()?"":"nie ") + "jest uruchomiony" + 
+								"<br>Serwer posiada: " +  server.getMyBitCoins().size() + " BTC");
+						choosePanel.removeAll();
+						choosePanel.repaint();
+						refresh();
 					}
 				});
 	
@@ -246,26 +285,53 @@ public class Simulator {
 				btnTurnOn.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						server.setActual(true);
-						refresch();
+						txtpnInformation.setText("Serwer " + (server.getActive()?"":"nie ") + "jest aktywny: " +
+								"<br>Serwer " + (server.getActual()?"":"nie ") + "jest uruchomiony" + 
+								"<br>Serwer posiada: " +  server.getMyBitCoins().size() + " BTC");
+						choosePanel.removeAll();
+						choosePanel.repaint();
+						refresh();
 					}
 				});
 				
 				JButton btnTracking = new JButton("\u015Aled\u017A");
 				panelButton.add(btnTracking, BorderLayout.CENTER);
 				btnTracking.addActionListener(new ActionListener() {
+					
 					public void actionPerformed(ActionEvent e) {
+						choosePanel.removeAll();
+						fillChoosePane();
+						lblWybranySerwer.setText(server.getName());
+						txtpnInformacje.setText("Serwer " + (server.getActive()?"":"nie ") + "jest aktywny: " +
+								"<br>Serwer " + (server.getActual()?"":"nie ") + "jest uruchomiony" + 
+								"<br>Serwer posiada: " +  server.getMyBitCoins().size() + " BTC");
+						choosePanel.repaint();;
 						setBtcListPanel(server);
-						refresch();
+						refresh();
 					}
 				});
 			}
 		}
 		return panelServer;
 	}
-	private void refresch(){
+	
+	private void fillChoosePane(){
+		lblWybranySerwer = new JLabel("");
+		lblWybranySerwer.setFont(new Font("Tahoma", Font.BOLD, 14));
+		lblWybranySerwer.setHorizontalAlignment(SwingConstants.CENTER);
+		choosePanel.add(lblWybranySerwer, BorderLayout.NORTH);
+		
+		txtpnInformacje = new JTextPane();
+		txtpnInformacje.setContentType("text/html");
+		txtpnInformacje.setText("");
+		choosePanel.add(txtpnInformacje, BorderLayout.CENTER);
+	}
+	
+	private void refresh(){
 		btcPanel.removeAll();
 		for(int i=0; i<btcList.size(); i++){
 			btcPanel.add(btcList.get(i));
 		}
+		
 	}
 }
