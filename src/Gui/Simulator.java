@@ -166,7 +166,7 @@ public class Simulator {
 
 		btnWylij.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				System.out.println("wysy³anie");
+				System.out.println("wysyï¿½anie");
 				String reciver = toTextField.getText();
 				try{
 					Integer.parseInt(howManyTextField.getText());
@@ -182,7 +182,7 @@ public class Simulator {
 												s.send(s.getMyBitCoins().get(0), r);
 											else{
 												JOptionPane.showMessageDialog(null,
-												        "Brak bitcoinów", "B³¹d",
+												        "Brak bitcoinï¿½w", "Bï¿½ï¿½d",
 												        JOptionPane.ERROR_MESSAGE);
 												break;
 											}
@@ -190,7 +190,7 @@ public class Simulator {
 									}
 									if(!ready){
 										JOptionPane.showMessageDialog(null,
-										        "B³êdna nazwa odbiorcy", "B³¹d",
+										        "Bï¿½ï¿½dna nazwa odbiorcy", "Bï¿½ï¿½d",
 										        JOptionPane.ERROR_MESSAGE);
 									}
 								}
@@ -199,7 +199,7 @@ public class Simulator {
 				}
 				catch (NumberFormatException err) {
 					JOptionPane.showMessageDialog(null,
-					        "B³êdna liczba","B³¹d",
+					        "Bï¿½ï¿½dna liczba","Bï¿½ï¿½d",
 					        JOptionPane.ERROR_MESSAGE);
 				}
 				setBlockChainList();
@@ -219,7 +219,7 @@ public class Simulator {
 							refresh();
 						} catch (ProtocolBitCoinDead e1) {
 							JOptionPane.showMessageDialog(null,
-							        "Brak wystarczaj¹cej iloœci wêz³ów do wiarygodnego wznowienia blockchaina", "B³¹d",
+							        "Brak wystarczajï¿½cej iloï¿½ci wï¿½zï¿½ï¿½w do wiarygodnego wznowienia blockchaina", "Bï¿½ï¿½d",
 							        JOptionPane.ERROR_MESSAGE);
 						}
 					}
@@ -265,9 +265,9 @@ public class Simulator {
 			JTextPane txtpnInformation = new JTextPane();
 			txtpnInformation.setContentType("text/html");
 			txtpnInformation.setText("Bitcoin nr:" + chain.getBtc().getBtcNumber() + 
-					" wys³a³ " + chain.getFrom().getName() +
+					" wysï¿½aï¿½ " + chain.getFrom().getName() +
 					" do " + chain.getTo().getName() + 
-					" zatwierdzi³ " + chain.getValidator().getName() +
+					" zatwierdziï¿½ " + chain.getValidator().getName() +
 					" zatwierdzono " + chain.getValidate());
 			panelBtc.add(txtpnInformation, BorderLayout.CENTER);
 		}
@@ -286,7 +286,7 @@ public class Simulator {
 			panelBtc.add(lblServernumber, BorderLayout.NORTH);
 			
 			JTextPane txtpnInformation = new JTextPane();
-			txtpnInformation.setText("W³aœciciel bitcoina: " + btc.getOwner());
+			txtpnInformation.setText("Wï¿½aï¿½ciciel bitcoina: " + btc.getOwner());
 			panelBtc.add(txtpnInformation, BorderLayout.CENTER);
 		}
 		return panelBtc;
@@ -305,8 +305,8 @@ public class Simulator {
 			
 			JTextPane txtpnInformation = new JTextPane();
 			txtpnInformation.setContentType("text/html");
-			txtpnInformation.setText("Serwer " + (server.getActive()?"":"nie ") + "jest aktywny: " +
-					"<br>Serwer " + (server.getActual()?"":"nie ") + "jest uruchomiony" + 
+			txtpnInformation.setText("Serwer " + (server.getActual()?"":"nie ") + "jest aktywny: " +
+					"<br>Serwer " + (server.getActive()?"":"nie ") + "jest uruchomiony" + 
 					"<br>Serwer posiada: " +  server.getMyBitCoins().size() + " BTC");
 			txtpnInformation.setEditable(false);
 			panelServer.add(txtpnInformation, BorderLayout.CENTER);
@@ -322,10 +322,9 @@ public class Simulator {
 				panelButton.add(btnAccident, BorderLayout.WEST);
 				btnAccident.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						//server.setActive(false);
 						server.goSleep();
-						txtpnInformation.setText("Serwer " + (server.getActive()?"":"nie ") + "jest aktywny: " +
-								"<br>Serwer " + (server.getActual()?"":"nie ") + "jest uruchomiony" + 
+						txtpnInformation.setText("Serwer " + (server.getActual()?"":"nie ") + "jest aktywny: " +
+								"<br>Serwer " + (server.getActive()?"":"nie ") + "jest uruchomiony" + 
 								"<br>Serwer posiada: " +  server.getMyBitCoins().size() + " BTC");
 						choosePanel.removeAll();
 						choosePanel.repaint();
@@ -337,9 +336,9 @@ public class Simulator {
 				panelButton.add(btnTurnOn, BorderLayout.EAST);
 				btnTurnOn.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						server.setActual(true);
-						txtpnInformation.setText("Serwer " + (server.getActive()?"":"nie ") + "jest aktywny: " +
-								"<br>Serwer " + (server.getActual()?"":"nie ") + "jest uruchomiony" + 
+						server.setActive(true);
+						txtpnInformation.setText("Serwer " + (server.getActual()?"":"nie ") + "jest aktywny: " +
+								"<br>Serwer " + (server.getActive()?"":"nie ") + "jest uruchomiony" + 
 								"<br>Serwer posiada: " +  server.getMyBitCoins().size() + " BTC");
 						choosePanel.removeAll();
 						choosePanel.repaint();
@@ -355,8 +354,8 @@ public class Simulator {
 						choosePanel.removeAll();
 						fillChoosePane();
 						lblWybranySerwer.setText(server.getName());
-						txtpnInformacje.setText("Serwer " + (server.getActive()?"":"nie ") + "jest aktywny: " +
-								"<br>Serwer " + (server.getActual()?"":"nie ") + "jest uruchomiony" + 
+						txtpnInformacje.setText("Serwer " + (server.getActual()?"":"nie ") + "jest aktywny: " +
+								"<br>Serwer " + (server.getActive()?"":"nie ") + "jest uruchomiony" + 
 								"<br>Serwer posiada: " +  server.getMyBitCoins().size() + " BTC");
 						choosePanel.repaint();;
 						setBtcListPanel(server);

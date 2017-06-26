@@ -11,10 +11,11 @@ public class wakeUpServer implements Runnable {
 		// TODO Auto-generated method stub
 
 		server.setActive(true);
-		// uzupelnic liste myBitCoin ,Bit coins , block chain
-
+		// uzupelnic liste myBitCoibn ,Bit coins , block chain
+            System.out.println("1");
 		// 1. wyslac zapytanie to aktualnego servera
 		Server serv = getActualServer();
+		 System.out.println("2");
 		System.out.println("actual: " + serv.getName());
 		if (serv != null) {
 

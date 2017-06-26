@@ -103,6 +103,7 @@ public class Server implements BitCoinManagament {
 
 		Thread thread = new Thread(new wakeUpServer(this));
         thread.start();  
+     
 	}
 
 	
@@ -111,9 +112,15 @@ public class Server implements BitCoinManagament {
 	
 		Thread thread = new Thread(new SendBtc(btc, to, this));
         if(actual==true)thread.start();
-   
-	
+ 
 		
+	}
+	public synchronized void sendMoreThen1Btcs(ArrayList<BitCoin> btcs, Server to) {
+        
+		
+		Thread thread = new Thread(new SendMoreThen1(btcs, to, this));
+        if(actual==true)thread.start();
+ 
 		
 	}
 	public synchronized Boolean verify(BitCoin btc, Server from) {
