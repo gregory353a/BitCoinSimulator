@@ -61,20 +61,14 @@ public class Main {
 		System.out.println("s3 Bit coins: "+s3.getMyBitCoins());
 		System.out.println("Po wysłaniu BitCoina !!!!!!!!");
 
-;
- 		s1.send(b1, s2);
-		s1.send(b2, s3);
-	
-        System.out.println("s1 Bit coins: "+s1.getMyBitCoins());
- 		System.out.println("s2 Bit coins: "+s2.getMyBitCoins());
- 		System.out.println("s3 Bit coins: "+s3.getMyBitCoins());
  	
-         s2.wakeUp();
-         System.out.println("s1 Bit coins: "+s1.getMyBitCoins());
-  		System.out.println("s2 Bit coins: "+s2.getMyBitCoins());
-  		System.out.println("s3 Bit coins: "+s3.getMyBitCoins());
-  	
+    
+        s2.send(b1, s1);
 
+  	
+		System.out.println("s1 Bit coins: "+s1.getMyBitCoins());
+		System.out.println("s2 Bit coins: "+s2.getMyBitCoins());
+		System.out.println("s3 Bit coins: "+s3.getMyBitCoins());
 	
 	}
 

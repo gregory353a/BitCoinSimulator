@@ -80,59 +80,7 @@ public class Server implements BitCoinManagament {
 		this.blockChain = blockChain;
 	}
 
-	public Boolean send(BitCoin btc, Server to) {
 
-		Transaction transaction = new Transaction(btc, this, to);
-
-		Server activeServer = getActualServer(to);
-
-		if (activeServer != null) {
-
-			transaction.setValidator(activeServer); // ustawiamy validatora
-
-			// wysyłamy bitCina tylko dla zweryfikowanego użytkownika
-			if (activeServer.verify(btc, this)) {
-
-				// zmieniam wlasciciela BitCoina
-				btc.setOwner(to.getName());
-				// usuwam u siebie Bit coina
-				myBitCoins.remove(btc);
-
-				transaction.setValidate(true);
-             
-			     sendInformationToOtherServers();	
-			    if(to.getActive()) to.myBitCoins.add(btc);
-			     
-				blockChain.add(transaction);
-
-				return true;
-
-			} else {
-				transaction.setValidate(false);
-				blockChain.add(transaction);
-				System.out.println("You can't send bit coin which you don't have!");
-			}
-
-		}
-
-
-		return false;
-	}
-	public void sendInformationToOtherServers(){
-		      
-		  for(Server serv: AllServers){
-			  
-			  if(serv.getActive()){
-				  
-				  serv.setBitCoins(bitCoins);
-				  serv.setBlockChain(blockChain);
-				
-				  
-			  }
-			  
-		  }	
-		
-	}
 
 	public ArrayList<BitCoin> getBitCoins() {
 		return bitCoins;
@@ -142,41 +90,8 @@ public class Server implements BitCoinManagament {
 		this.bitCoins = bitCoins;
 	}
 
-	public Boolean verify(BitCoin btc, Server from) {
 
-		// TODO
-		// kruczek : dopoki mi nie zrobi veryfaja nic nie moze zmienic mi server
-		return from.getName() == btc.getOwner() && bitCoins.contains(btc) ? true : false;
 
-	}
-
-	public Server getActualServer(Server to) {
-
-		for (Server s : AllServers) {
-
-			if ((!s.equals(this)) && (s.actual == true) && (!s.equals(to)))
-				return s;
-		}
-
-		System.out.println("No server is avaliable right now to verify transaction");
-
-		return null;
-
-	}
-
-	public Server getActualServer() {
-
-		for (Server s : AllServers) {
-
-			if ((!s.equals(this)) && (s.actual == true))
-				return s;
-		}
-
-		System.out.println("No server is avaliable right now to verify transaction");
-
-		return null;
-
-	}
 
 	public void goSleep() {
 
@@ -186,36 +101,27 @@ public class Server implements BitCoinManagament {
 
 	public void wakeUp() throws ProtocolBitCoinDead {
 
-		setActive(true);
-		// uzupelnic liste myBitCoin ,Bit coins , block chain
-
-		// 1. wyslac zapytanie to aktualnego servera
-		Server serv = getActualServer();
-           System.out.println("actual: " + serv.getName());
-		if (serv != null) {
-
-			this.bitCoins= serv.getBitCoins();
-			
-			
-			int size = blockChain.size();
-
-			for (int i = size; i < serv.getBlockChain().size(); i++) {
-				
-				
-		
-				this.blockChain.add(serv.getBlockChain().get(i));
-		
-				if (serv.getBlockChain().get(i).getTo() == this && (serv.getBlockChain().get(i).getValidate())) {
-					this.myBitCoins.add(serv.getBlockChain().get(i).getBtc());
-				}
-			}
-
-		} else {
-
-			throw new ProtocolBitCoinDead();
-
-		}
-         setActual(true);
+		Thread thread = new Thread(new wakeUpServer(this));
+        thread.start();  
 	}
+
+	
+	public synchronized void send(BitCoin btc, Server to) {
+	        
+	
+		Thread thread = new Thread(new SendBtc(btc, to , this));
+        if(actual==true)thread.start();
+   
+	
+		
+		
+	}
+	public synchronized Boolean verify(BitCoin btc, Server from) {
+
+		
+		return from.getName() == btc.getOwner() && bitCoins.contains(btc) ? true : false;
+
+	}
+
 
 }
