@@ -109,7 +109,7 @@ public class Server implements BitCoinManagament {
 	public synchronized void send(BitCoin btc, Server to) {
 	        
 	
-		Thread thread = new Thread(new SendBtc(btc, to , this));
+		Thread thread = new Thread(new SendBtc(btc, to, this));
         if(actual==true)thread.start();
    
 	

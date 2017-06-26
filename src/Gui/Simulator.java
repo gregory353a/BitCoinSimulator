@@ -2,7 +2,6 @@ package Gui;
 
 import java.awt.EventQueue;
 import java.util.ArrayList;
-import java.util.GregorianCalendar;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -15,8 +14,11 @@ import enviroment.BitCoin;
 import enviroment.Server;
 import enviroment.Transaction;
 import enviroment.Information;
+import enviroment.ProtocolBitCoinDead;
 
 import javax.swing.JLayeredPane;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -37,6 +39,7 @@ public class Simulator {
 	private JPanel choosePanel;
 	private JTextPane txtpnInformacje;
 	private JLabel lblWybranySerwer;
+	JButton btnSetActive;
 	
 	private ArrayList<BitCoin> btcList1 = new ArrayList<>();
 	private ArrayList<BitCoin> btcList2 = new ArrayList<>();
@@ -143,10 +146,10 @@ public class Simulator {
 		frame.getContentPane().add(lblBlockchain);
 		
 		JLabel lblWybrano = new JLabel("Wybrano:");
-		lblWybrano.setBounds(820, 5, 250, 20);
+		lblWybrano.setBounds(820, 5, 164, 20);
 		frame.getContentPane().add(lblWybrano);
 		
-		JButton btnWyczy = new JButton("Wyczy\u015B\u0107");
+		JButton btnWyczy =new JButton("Wyczy\u015B\u0107");
 		btnWyczy.setBounds(451, 4, 89, 23);
 		frame.getContentPane().add(btnWyczy);
 		btnWyczy.addActionListener(new ActionListener() {
@@ -161,26 +164,67 @@ public class Simulator {
 		JButton btnWylij = new JButton("Wy\u015Blij");
 		btnWylij.setBounds(910, 280, 86, 23);
 		frame.getContentPane().add(btnWylij);
+
 		btnWylij.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("wysy³anie");
 				String reciver = toTextField.getText();
-				for(int i=0; i<Integer.parseInt(howManyTextField.getText()); i++){
-					for(Server r : info.getallServers()){
-						if(r.getName().contains(reciver)){
-							System.out.println("Znaleziony");
-							for(Server s : info.getallServers()){
-								if(s.getName().contains(lblWybranySerwer.getText())){
-									if(!s.getMyBitCoins().isEmpty())
-										s.send(s.getMyBitCoins().get(0), r);
-									else
-										System.out.println("Brak bitcoinów");
+				try{
+					Integer.parseInt(howManyTextField.getText());
+					if(((!howManyTextField.getText().isEmpty())&&(!reciver.isEmpty())))
+						for(int i=0; i<Integer.parseInt(howManyTextField.getText()); i++){
+							for(Server r : info.getallServers()){
+								if(r.getName().contains(reciver)){
+									Boolean ready = false;
+									for(Server s : info.getallServers()){
+										if(s.getName().contains(lblWybranySerwer.getText())){
+											ready = true;
+											if(!s.getMyBitCoins().isEmpty())
+												s.send(s.getMyBitCoins().get(0), r);
+											else{
+												JOptionPane.showMessageDialog(null,
+												        "Brak bitcoinów", "B³¹d",
+												        JOptionPane.ERROR_MESSAGE);
+												break;
+											}
+										}
+									}
+									if(!ready){
+										JOptionPane.showMessageDialog(null,
+										        "B³êdna nazwa odbiorcy", "B³¹d",
+										        JOptionPane.ERROR_MESSAGE);
+									}
 								}
 							}
 						}
+				}
+				catch (NumberFormatException err) {
+					JOptionPane.showMessageDialog(null,
+					        "B³êdna liczba","B³¹d",
+					        JOptionPane.ERROR_MESSAGE);
+				}
+				setBlockChainList();
+				refresh();
+			}
+		});
+		
+		btnSetActive = new JButton("Aktywuj");
+		btnSetActive.setBounds(994, 4, 86, 23);
+		frame.getContentPane().add(btnSetActive);
+		btnSetActive.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				for(Server s : info.getallServers()){
+					if(s.getName().contains(lblWybranySerwer.getText())){
+						try {
+							s.wakeUp();
+							refresh();
+						} catch (ProtocolBitCoinDead e1) {
+							JOptionPane.showMessageDialog(null,
+							        "Brak wystarczaj¹cej iloœci wêz³ów do wiarygodnego wznowienia blockchaina", "B³¹d",
+							        JOptionPane.ERROR_MESSAGE);
+						}
 					}
 				}
-				refresh();
 			}
 		});
 		refresh();

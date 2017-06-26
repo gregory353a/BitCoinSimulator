@@ -1,10 +1,14 @@
 package enviroment;
 
+import java.util.ArrayList;
+import java.util.Random;
+
 public class SendBtc  implements Runnable{
 
 	private BitCoin btc;
 	private Server to;
 	private Server server;
+	private Random random = new Random();
 
     public SendBtc(BitCoin btc, Server to, Server server){
 	   
@@ -18,7 +22,7 @@ public class SendBtc  implements Runnable{
 
 		Transaction transaction = new Transaction(btc, server, to);
 
-		Server activeServer = getActualServer(to);
+		Server activeServer = getActualServer(to, server);
 
 		if (activeServer != null) {
 
@@ -39,8 +43,6 @@ public class SendBtc  implements Runnable{
 					to.getMyBitCoins().add(btc);
 
 				server.getBlockChain().add(transaction);
-				
-
 			} else {
 				transaction.setValidate(false);
 				server.getBlockChain().add(transaction);
@@ -67,12 +69,18 @@ public class SendBtc  implements Runnable{
 
 	}
 
-	public synchronized Server getActualServer(Server to) {
+	public synchronized Server getActualServer(Server to, Server from) {
+		ArrayList<Integer>sequence = new ArrayList<>();
+		while(sequence.size()<server.getAllServers().size()){
+			int x = random.nextInt(server.getAllServers().size());
+			if(!sequence.contains(x))
+				sequence.add(x);
+		}
+		for (int i=0; i<sequence.size(); i++) {
 
-		for (Server s : server.getAllServers()) {
-
-			if ((!s.equals(this)) && (!s.equals(to) && (s.getActual() == true)))
-				return s;
+			if ((!server.getAllServers().get(sequence.get(i)).equals(from)) && (!server.getAllServers().get(sequence.get(i)).equals(to) &&
+					(server.getAllServers().get(sequence.get(i)).getActual() == true)))
+				return server.getAllServers().get(sequence.get(i));
 		}
 
 		System.out.println("No server is avaliable right now to verify transaction");
