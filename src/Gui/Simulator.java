@@ -28,9 +28,9 @@ public class Simulator {
 	private JLayeredPane blockchainPanel;
 	private JLayeredPane btcPanel;
 	private JLayeredPane serverPanel;
-	private ArrayList<JPanel> chainList;
-	private ArrayList<JPanel> serverList;
-	private ArrayList<JPanel> btcList;
+	private ArrayList<JPanel> chainList = new ArrayList<>();
+	private ArrayList<JPanel> serverList = new ArrayList<>();
+	private ArrayList<JPanel> btcList = new ArrayList<>();
 	
 	private final int offsetY = 5;
 	private final int offsetX = 10;
@@ -70,7 +70,7 @@ public class Simulator {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 1096, 700);
+		frame.setBounds(100, 100, 1108, 700);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
@@ -112,7 +112,7 @@ public class Simulator {
 		}
 		
 		JPanel choosePanel = new JPanel();
-		choosePanel.setBounds(820, 30, 250, 185);
+		choosePanel.setBounds(820, 30, 260, 185);
 		frame.getContentPane().add(choosePanel);
 		
 		toTextField = new JTextField();
@@ -161,7 +161,7 @@ public class Simulator {
 	private void setServerList(){
 	//	serverList = ;
 	}
-	
+
 	private void setBtcListPanel(Server server){
 		btcList.clear();
 		for(int i=0; i<server.getMyBitCoins().size(); i++){
@@ -169,7 +169,7 @@ public class Simulator {
 		}
 	}
 	
-	
+	//TODO
 	private JPanel newBlockChain(int position) {
 		JPanel panelBtc = new JPanel();
 		int y = (offsetY + blockChainHeight)* position + offsetY;
@@ -200,7 +200,7 @@ public class Simulator {
 			panelBtc.add(lblServernumber, BorderLayout.NORTH);
 			
 			JTextPane txtpnInformation = new JTextPane();
-			txtpnInformation.setText("W³aœciciel bitcoina");
+			txtpnInformation.setText("W³aœciciel bitcoina: " + btc.getOwner());
 			panelBtc.add(txtpnInformation, BorderLayout.CENTER);
 		}
 		return panelBtc;
@@ -237,6 +237,7 @@ public class Simulator {
 				btnAccident.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						server.setActive(false);
+						refresch();
 					}
 				});
 	
@@ -245,13 +246,26 @@ public class Simulator {
 				btnTurnOn.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						server.setActual(true);
+						refresch();
 					}
 				});
 				
 				JButton btnTracking = new JButton("\u015Aled\u017A");
 				panelButton.add(btnTracking, BorderLayout.CENTER);
+				btnTracking.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						setBtcListPanel(server);
+						refresch();
+					}
+				});
 			}
 		}
 		return panelServer;
+	}
+	private void refresch(){
+		btcPanel.removeAll();
+		for(int i=0; i<btcList.size(); i++){
+			btcPanel.add(btcList.get(i));
+		}
 	}
 }
