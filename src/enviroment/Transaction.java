@@ -1,5 +1,7 @@
 package enviroment;
 
+import java.util.GregorianCalendar;
+
 public class Transaction {
 
 	private BitCoin btc;
@@ -7,6 +9,7 @@ public class Transaction {
 	private Server to;
 	private Server validator;
 	private Boolean validate; 
+	private GregorianCalendar date;
 	
 	
 	@Override
@@ -52,6 +55,7 @@ public class Transaction {
 	             this.to=to;
 	             this.validator=null;
 	             this.validate=false;
+	             this.date = new GregorianCalendar();
 	}
 
 
@@ -72,6 +76,11 @@ public class Transaction {
 
 	public void setValidator(Server validator) {
 		this.validator = validator;
+	}
+
+
+	public GregorianCalendar getDate() {
+		return date;
 	}
 
 }

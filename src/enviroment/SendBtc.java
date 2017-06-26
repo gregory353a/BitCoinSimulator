@@ -71,7 +71,7 @@ public class SendBtc  implements Runnable{
 
 		for (Server s : server.getAllServers()) {
 
-			if ((!s.equals(this)) && (s.getActual() == true) && (!s.equals(to)))
+			if ((!s.equals(this)) && (!s.equals(to) && (s.getActual() == true)))
 				return s;
 		}
 

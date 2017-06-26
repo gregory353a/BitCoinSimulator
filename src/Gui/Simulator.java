@@ -2,6 +2,7 @@ package Gui;
 
 import java.awt.EventQueue;
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -12,6 +13,7 @@ import javax.swing.SwingConstants;
 
 import enviroment.BitCoin;
 import enviroment.Server;
+import enviroment.Transaction;
 import enviroment.Information;
 
 import javax.swing.JLayeredPane;
@@ -20,8 +22,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.BorderLayout;
 import javax.swing.JTextPane;
-import java.awt.Button;
-import javax.swing.JTextArea;
 
 public class Simulator {
 
@@ -38,13 +38,23 @@ public class Simulator {
 	private JTextPane txtpnInformacje;
 	private JLabel lblWybranySerwer;
 	
+	private ArrayList<BitCoin> btcList1 = new ArrayList<>();
+	private ArrayList<BitCoin> btcList2 = new ArrayList<>();
+	private ArrayList<BitCoin> btcList3 = new ArrayList<>();
+	private ArrayList<BitCoin> btcList4 = new ArrayList<>();
+	private ArrayList<BitCoin> btcList5 = new ArrayList<>();
+	private ArrayList<BitCoin> btcListAll = new ArrayList<>();
+	private ArrayList<Server> servers = new ArrayList<>();
+	
+	private Information info;
+	
 	private final int offsetY = 5;
 	private final int offsetX = 10;
 	private final int serverHeight = 105;
 	private final int serverWidth = 240;
 	private final int btcHeight = 35;
 	private final int btcWidth = 240;
-	private final int blockChainHeight = 35;
+	private final int blockChainHeight = 70;
 	private final int blockChainWidth = 240;
 	
 	
@@ -75,6 +85,8 @@ public class Simulator {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+		init();
+		info = new Information(btcListAll, servers);
 		frame = new JFrame();
 		frame.setBounds(100, 100, 1108, 700);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -91,31 +103,6 @@ public class Simulator {
 		blockchainPanel = new JLayeredPane();
 		blockchainPanel.setBounds(550, 30, 260, 621);
 		frame.getContentPane().add(blockchainPanel);
-		
-		ArrayList<BitCoin> s1Btc = new ArrayList<>();
-		BitCoin b1=new BitCoin("s1", 1);
-		BitCoin b2=new BitCoin("s1", 2);
-		BitCoin b3=new BitCoin("s2", 3);
-		BitCoin b4=new BitCoin("s2", 4);
-		BitCoin b5=new BitCoin("s3", 5);
-		BitCoin b6=new BitCoin("s3", 6);
-		s1Btc.add(b1);
-		s1Btc.add(b2);
-		ArrayList<BitCoin> s2Btc = new ArrayList<>();
-		s2Btc.add(b3);
-		s2Btc.add(b4);
-		ArrayList<BitCoin> s3Btc = new ArrayList<>();
-		s3Btc.add(b5);
-		s3Btc.add(b6);
-		ArrayList<BitCoin> all = new ArrayList<>();
-		all.addAll(s1Btc);
-		all.addAll(s2Btc);
-		all.addAll(s3Btc);
-		
-		for(int i= 0; i<10; i++){
-		serverPanel.add(newServer(i, new Server("hello"+i, all, s1Btc)));
-		blockchainPanel.add(newBlockChain(i));
-		}
 		
 		choosePanel = new JPanel();
 		choosePanel.setBounds(820, 30, 260, 185);
@@ -177,45 +164,68 @@ public class Simulator {
 		btnWylij.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("wysy³anie");
-				toTextField.getText();
-				howManyTextField.getText();
-				btcList.clear();
-				btcPanel.repaint();
+				String reciver = toTextField.getText();
+				for(int i=0; i<Integer.parseInt(howManyTextField.getText()); i++){
+					for(Server r : info.getallServers()){
+						if(r.getName().contains(reciver)){
+							System.out.println("Znaleziony");
+							for(Server s : info.getallServers()){
+								if(s.getName().contains(lblWybranySerwer.getText())){
+									if(!s.getMyBitCoins().isEmpty())
+										s.send(s.getMyBitCoins().get(0), r);
+									else
+										System.out.println("Brak bitcoinów");
+								}
+							}
+						}
+					}
+				}
+				refresh();
 			}
 		});
+		refresh();
 	}
 	
-	//TODO
 	private void setServerList(){
-	//	serverList = ;
+		serverList.clear();
+		for(int i=0; i<servers.size(); i++){
+			serverList.add(newServer(i, servers.get(i)));
+		}
 	}
 
-	//TODO
 	private void setBlockChainList(){
-
+		chainList.clear();
+		for(int i=0; i<info.getallTransactions().size(); i++){
+			chainList.add(newBlockChain(i, info.getallTransactions().get(info.getallTransactions().size()-1-i)));
+		}
 	}
 	
 	private void setBtcListPanel(Server server){
 		btcList.clear();
 		for(int i=0; i<server.getMyBitCoins().size(); i++){
-		btcList.add(newBtc(i, server.getMyBitCoins().get(i)));	
+			btcList.add(newBtc(i, server.getMyBitCoins().get(i)));	
 		}
 	}
 	
-	//TODO
-	private JPanel newBlockChain(int position) {
+	private JPanel newBlockChain(int position, Transaction chain) {
 		JPanel panelBtc = new JPanel();
 		int y = (offsetY + blockChainHeight)* position + offsetY;
 		panelBtc.setBounds(offsetX, y, blockChainWidth, blockChainHeight);
 		panelBtc.setLayout(new BorderLayout(0, 0));
 		{
-			JLabel lblServernumber = new JLabel("chainNumber");
+			String transact = (chain.getFrom() + " " + chain.getBtc() + " " + chain.getTo() + chain.getDate());
+			JLabel lblServernumber = new JLabel(transact.hashCode() + "");
 			lblServernumber.setHorizontalAlignment(SwingConstants.CENTER);
 			lblServernumber.setFont(new Font("Tahoma", Font.BOLD, 12));
 			panelBtc.add(lblServernumber, BorderLayout.NORTH);
 			
 			JTextPane txtpnInformation = new JTextPane();
-			txtpnInformation.setText("Informacje kto, co, kiedy");
+			txtpnInformation.setContentType("text/html");
+			txtpnInformation.setText("Bitcoin nr:" + chain.getBtc().getBtcNumber() + 
+					" wys³a³ " + chain.getFrom().getName() +
+					" do " + chain.getTo().getName() + 
+					" zatwierdzi³ " + chain.getValidator().getName() +
+					" zatwierdzono " + chain.getValidate());
 			panelBtc.add(txtpnInformation, BorderLayout.CENTER);
 		}
 		return panelBtc;
@@ -328,10 +338,59 @@ public class Simulator {
 	}
 	
 	private void refresh(){
+		setBlockChainList();
+		blockchainPanel.removeAll();
+		for(int i=0; i<chainList.size(); i++){
+			blockchainPanel.add(chainList.get(i));
+		}
+		setServerList();
+		serverPanel.removeAll();
+		for(int i=0; i<serverList.size(); i++){
+			serverPanel.add(serverList.get(i));
+		}
+		serverPanel.repaint();
 		btcPanel.removeAll();
 		for(int i=0; i<btcList.size(); i++){
-			btcPanel.add(btcList.get(i));
+			if(!btcList.isEmpty())
+				btcPanel.add(btcList.get(i));
 		}
 		
+	}
+
+	public JFrame getFrame() {
+		return frame;
+	}
+
+	private void init(){
+		for(int i = 0; i< 10; i++){
+			btcList1.add(new BitCoin("Alice", i));
+		}
+		for(int i = 10; i< 20; i++){
+			btcList2.add(new BitCoin("Bob", i));			
+		}
+		for(int i = 20; i< 30; i++){
+			btcList3.add(new BitCoin("Carol", i));
+		}
+		for(int i = 30; i< 40; i++){
+			btcList4.add(new BitCoin("Dave", i));
+		}
+		for(int i = 40; i< 50; i++){
+			btcList5.add(new BitCoin("Ewa", i));
+		}
+		btcListAll.addAll(btcList1);
+		btcListAll.addAll(btcList2);
+		btcListAll.addAll(btcList3);
+		btcListAll.addAll(btcList4);
+		btcListAll.addAll(btcList5);
+		
+		servers.add(new Server("Alice", btcListAll, btcList1));
+		servers.add(new Server("Bob", btcListAll, btcList2));
+		servers.add(new Server("Carol", btcListAll, btcList3));
+		servers.add(new Server("Dave", btcListAll, btcList4));
+		servers.add(new Server("Ewa", btcListAll, btcList5));
+		
+		for(Server s : servers){
+			s.setAllServers(servers);
+		}
 	}
 }

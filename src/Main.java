@@ -1,14 +1,28 @@
+import java.awt.EventQueue;
 import java.util.ArrayList;
 import enviroment.BitCoin;
 import enviroment.ProtocolBitCoinDead;
 import enviroment.Server;
-
+import Gui.Simulator;
 
 public class Main {
-
+	
 	public static void main(String[] args) throws ProtocolBitCoinDead {
-		initialize();
+		init()
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					Simulator window = new Simulator();
+					window.getFrame().setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+
+		System.out.println("zakoñczono");
 	}
+
 
 	private static void initialize() throws ProtocolBitCoinDead {
 		ArrayList<BitCoin> s1Btc = new ArrayList<>();
