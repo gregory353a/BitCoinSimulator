@@ -1,6 +1,5 @@
 import java.util.ArrayList;
 
-import enviroment.AllServers;
 import enviroment.BitCoin;
 import enviroment.Server;
 import enviroment.Transaction;
@@ -51,10 +50,8 @@ public class Main {
         allBtc.add(b4);
         allBtc.add(b5);
         allBtc.add(b6);
-		AllServers.allServers=allS;
-		AllServers.bitCoins=allBtc;
 		ArrayList<Transaction> tr= new ArrayList<>();
-		AllServers.transactions=tr;
+
 		
 	
 		System.out.println("s1 Bit coins: "+s1.getMyBitCoins());

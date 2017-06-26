@@ -15,6 +15,8 @@ import enviroment.Server;
 
 import javax.swing.JLayeredPane;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.BorderLayout;
 import javax.swing.JTextPane;
 
@@ -30,9 +32,9 @@ public class Simulator {
 	private ArrayList<JPanel> serverList;
 	private ArrayList<JPanel> btcList;
 	
-	private final int offsetY = 10;
+	private final int offsetY = 5;
 	private final int offsetX = 10;
-	private final int serverHeight = 100;
+	private final int serverHeight = 105;
 	private final int serverWidth = 240;
 	private final int btcHeight = 35;
 	private final int btcWidth = 240;
@@ -104,10 +106,8 @@ public class Simulator {
 		all.addAll(s2Btc);
 		all.addAll(s3Btc);
 		
-		
 		for(int i= 0; i<10; i++){
 		serverPanel.add(newServer(i, new Server("hello"+i, all, s1Btc)));
-		btcPanel.add(newBtc(i));
 		blockchainPanel.add(newBlockChain(i));
 		}
 		
@@ -157,6 +157,19 @@ public class Simulator {
 		frame.getContentPane().add(lblWybrano);
 	}
 	
+	//TODO
+	private void setServerList(){
+	//	serverList = ;
+	}
+	
+	private void setBtcListPanel(Server server){
+		btcList.clear();
+		for(int i=0; i<server.getMyBitCoins().size(); i++){
+		btcList.add(newBtc(i, server.getMyBitCoins().get(i)));	
+		}
+	}
+	
+	
 	private JPanel newBlockChain(int position) {
 		JPanel panelBtc = new JPanel();
 		int y = (offsetY + blockChainHeight)* position + offsetY;
@@ -175,7 +188,7 @@ public class Simulator {
 		return panelBtc;
 	}	
 	
-	private JPanel newBtc(int position) {
+	private JPanel newBtc(int position, BitCoin btc) {
 		JPanel panelBtc = new JPanel();
 		int y = (offsetY + btcHeight)* position + offsetY;
 		panelBtc.setBounds(offsetX, y, btcWidth, btcHeight);
@@ -205,9 +218,11 @@ public class Simulator {
 			panelServer.add(lblServernumber, BorderLayout.NORTH);
 			
 			JTextPane txtpnInformation = new JTextPane();
+			txtpnInformation.setContentType("text/html");
 			txtpnInformation.setText("Serwer jest aktywny: " + server.getActive() +
-					"Serwer jest uruchomiony" + server.getActual() + 
-					"Serwer dysponuje: " +  server.getMyBitCoins().size() + " Bitcoinami");
+					"<br>Serwer jest uruchomiony" + server.getActual() + 
+					"<br>Serwer posiada: " +  server.getMyBitCoins().size() + " BTC");
+			txtpnInformation.setEditable(false);
 			panelServer.add(txtpnInformation, BorderLayout.CENTER);
 			
 			JPanel panelButton = new JPanel();
@@ -219,9 +234,19 @@ public class Simulator {
 				
 				JButton btnAccident = new JButton("Awaria");
 				panelButton.add(btnAccident, BorderLayout.WEST);
-				
+				btnAccident.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						server.setActive(false);
+					}
+				});
+	
 				JButton btnTurnOn = new JButton("Uruchom");
 				panelButton.add(btnTurnOn, BorderLayout.EAST);
+				btnTurnOn.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						server.setActual(true);
+					}
+				});
 				
 				JButton btnTracking = new JButton("\u015Aled\u017A");
 				panelButton.add(btnTracking, BorderLayout.CENTER);
