@@ -4,12 +4,13 @@ public class BitCoin {
 
 
 	private Integer btcNumber;
+	private String owner;
 
 	public String toString() {
 		return "BitCoin [btcNumber=" + btcNumber + ", owner=" + owner + "]";
 	}
 
-	private String owner; 
+	
 	
 	public BitCoin(String owner, Integer btcNum) {
 		

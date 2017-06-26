@@ -1,20 +1,16 @@
 import java.util.ArrayList;
-
 import enviroment.BitCoin;
+import enviroment.ProtocolBitCoinDead;
 import enviroment.Server;
-import enviroment.Transaction;
+
 
 public class Main {
 
-	public static void main(String[] args) {
-
+	public static void main(String[] args) throws ProtocolBitCoinDead {
 		initialize();
-		
-
 	}
 
-	public static void initialize() {
-
+	private static void initialize() throws ProtocolBitCoinDead {
 		ArrayList<BitCoin> s1Btc = new ArrayList<>();
 		BitCoin b1=new BitCoin("s1", 1);
 		BitCoin b2=new BitCoin("s1", 2);
@@ -38,8 +34,10 @@ public class Main {
 		Server s1 = new Server("s1", all, s1Btc);
 		Server s2 = new Server("s2", all, s2Btc);
 		Server s3 = new Server("s3", all, s3Btc);
-       
-		ArrayList<Server> allS= new ArrayList<Server>();
+	    ArrayList<Server> allS= new ArrayList<Server>();
+	    s1.setAllServers(allS);
+	    s2.setAllServers(allS);
+	    s3.setAllServers(allS);
         allS.add(s1);
         allS.add(s2);
         allS.add(s3);
@@ -50,28 +48,25 @@ public class Main {
         allBtc.add(b4);
         allBtc.add(b5);
         allBtc.add(b6);
-		ArrayList<Transaction> tr= new ArrayList<>();
-
-		
 	
 		System.out.println("s1 Bit coins: "+s1.getMyBitCoins());
 		System.out.println("s2 Bit coins: "+s2.getMyBitCoins());
 		System.out.println("s3 Bit coins: "+s3.getMyBitCoins());
 		System.out.println("Po wysłaniu BitCoina !!!!!!!!");
-        s3.setActual(false);
-		s1.send(b1, s2);
-		s3.setActual(true);
-		s1.send(b1, s2);
-        
+
+ 		s1.send(b1, s2);
+		s1.send(b2, s3);
+	
         System.out.println("s1 Bit coins: "+s1.getMyBitCoins());
  		System.out.println("s2 Bit coins: "+s2.getMyBitCoins());
  		System.out.println("s3 Bit coins: "+s3.getMyBitCoins());
- 	    s1.send(b6, s2);
-        System.out.println("s1 Bit coins: "+s1.getMyBitCoins());
-		System.out.println("s2 Bit coins: "+s2.getMyBitCoins());
-		System.out.println("s3 Bit coins: "+s3.getMyBitCoins());
-		
-		System.out.println("transactions: " +s1.getBlockChain());
+ 	
+         s2.wakeUp();
+         System.out.println("s1 Bit coins: "+s1.getMyBitCoins());
+  		System.out.println("s2 Bit coins: "+s2.getMyBitCoins());
+  		System.out.println("s3 Bit coins: "+s3.getMyBitCoins());
+  	
+
 	
 	}
 
