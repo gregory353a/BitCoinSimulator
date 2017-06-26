@@ -5,8 +5,8 @@ public class Transaction {
 	private BitCoin btc;
 	private Server from;
 	private Server to;
-	private Server validator=null;
-	private Boolean validate=false; 
+	private Server validator;
+	private Boolean validate; 
 	
 	
 	@Override
@@ -50,6 +50,8 @@ public class Transaction {
 	             this.btc=btc;
 	             this.from=from;
 	             this.to=to;
+	             this.validator=null;
+	             this.validate=false;
 	}
 
 

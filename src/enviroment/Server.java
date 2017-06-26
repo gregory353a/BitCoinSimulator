@@ -11,6 +11,15 @@ public class Server implements BitCoinManagament {
 	private ArrayList<Server> AllServers;
 	private Boolean active;
 	private Boolean actual;
+	public ArrayList<Server> getAllServers() {
+		return AllServers;
+	}
+
+	public void setAllServers(ArrayList<Server> allServers) {
+		AllServers = allServers;
+	}
+
+
 
 	public Server(String name, ArrayList<BitCoin> btc, ArrayList<BitCoin> myBtc) {
 
@@ -19,6 +28,8 @@ public class Server implements BitCoinManagament {
 		this.myBitCoins = myBtc;
 		this.active = true;
 		this.actual = true;
+		this.blockChain = new  ArrayList<>();
+
 
 	}
 
@@ -88,6 +99,10 @@ public class Server implements BitCoinManagament {
 				myBitCoins.remove(btc);
 
 				transaction.setValidate(true);
+             
+			     sendInformationToOtherServers();	
+			    if(to.getActive()) to.myBitCoins.add(btc);
+			     
 				blockChain.add(transaction);
 
 				return true;
@@ -111,6 +126,7 @@ public class Server implements BitCoinManagament {
 				  
 				  serv.setBitCoins(bitCoins);
 				  serv.setBlockChain(blockChain);
+				
 				  
 			  }
 			  
@@ -175,15 +191,20 @@ public class Server implements BitCoinManagament {
 
 		// 1. wyslac zapytanie to aktualnego servera
 		Server serv = getActualServer();
-
+           System.out.println("actual: " + serv.getName());
 		if (serv != null) {
 
-			bitCoins = serv.getBitCoins();
-			int size = myBitCoins.size();
+			this.bitCoins= serv.getBitCoins();
+			
+			
+			int size = blockChain.size();
 
-			for (int i = size - 1; i < serv.getBlockChain().size(); i++) {
-
+			for (int i = size; i < serv.getBlockChain().size(); i++) {
+				
+				
+		
 				this.blockChain.add(serv.getBlockChain().get(i));
+		
 				if (serv.getBlockChain().get(i).getTo() == this && (serv.getBlockChain().get(i).getValidate())) {
 					this.myBitCoins.add(serv.getBlockChain().get(i).getBtc());
 				}
@@ -194,7 +215,7 @@ public class Server implements BitCoinManagament {
 			throw new ProtocolBitCoinDead();
 
 		}
-
+         setActual(true);
 	}
 
 }
