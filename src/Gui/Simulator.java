@@ -160,7 +160,6 @@ public class Simulator {
 			}
 		});
 		
-		//TODO
 		JButton btnWylij = new JButton("Wy\u015Blij");
 		btnWylij.setBounds(910, 280, 86, 23);
 		frame.getContentPane().add(btnWylij);

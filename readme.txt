@@ -1,1 +1,0 @@
-scaliłem gałęzie powinno śmigać
